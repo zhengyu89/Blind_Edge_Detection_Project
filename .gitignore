@@ -1,0 +1,19 @@
+# Ignore all .log files
+*.log
+
+# Ignore Python virtual environment
+djangoenv/
+
+# Ignore environment files
+.env
+
+# Ignore SQLite database
+db.sqlite3
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore config
+config
