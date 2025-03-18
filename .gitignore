@@ -3,6 +3,7 @@
 
 # Ignore Python virtual environment
 djangoenv/
+venv/
 
 # Ignore environment files
 .env
