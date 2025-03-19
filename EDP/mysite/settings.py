@@ -12,20 +12,25 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Get the BASE_DIR (outside mysite)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Access environment variables
-# GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-# GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
-# Api key for CV and text to speech
-GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+# Load .env from BASE_DIR
+ENV_PATH = os.path.join(BASE_DIR, '.env')
+load_dotenv(ENV_PATH)
 
-# Debugging (prints the key values)
-# print("GEMINI_API_KEY:", GEMINI_API_KEY)
-# print("GOOGLE_MAPS_API_KEY:", GOOGLE_MAPS_API_KEY)
-# print("GOOGLE_APPLICATION_CREDENTIALS:", GOOGLE_APPLICATION_CREDENTIALS)
+# Debugging: Print all environment variables (remove this in production)
+print("DEBUG: Loaded .env from", ENV_PATH)
+print("DEBUG: GOOGLE_APPLICATION_CREDENTIALS =", os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 
+# Ensure GOOGLE_APPLICATION_CREDENTIALS is set in os.environ
+GOOGLE_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+if GOOGLE_CREDENTIALS:
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_CREDENTIALS
+    print("DEBUG: GOOGLE_APPLICATION_CREDENTIALS has been set in os.environ")
+else:
+    print("WARNING: GOOGLE_APPLICATION_CREDENTIALS is NOT set!")
+    
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -54,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'vision',
 ]
 
 MIDDLEWARE = [

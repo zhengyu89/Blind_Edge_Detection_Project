@@ -2,7 +2,15 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from dotenv import load_dotenv
 
+# Load .env manually for manage.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ENV_PATH = os.path.join(BASE_DIR, '.env')
+load_dotenv(ENV_PATH)
+
+# Debugging
+print("DEBUG (manage.py): GOOGLE_APPLICATION_CREDENTIALS =", os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 
 def main():
     """Run administrative tasks."""
