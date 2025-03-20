@@ -14,15 +14,20 @@ class MyApp extends StatelessWidget{
       home:Scaffold(
         backgroundColor: Color.fromARGB(255, 116, 199, 237),
         body:Center(
-        child: SizedBox(
+        child: Container(
           height:300,
           width: 300,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20)
+          ),
         )
       ) 
       ),
     );
   }
 }
+
+//wahhhhhhhh
 
 
   
