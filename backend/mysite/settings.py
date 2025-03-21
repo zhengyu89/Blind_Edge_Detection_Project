@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'vision',
+    'tts',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'MYT'
+TIME_ZONE = 'Asia/Kuala_Lumpur'
 
 USE_I18N = True
 
