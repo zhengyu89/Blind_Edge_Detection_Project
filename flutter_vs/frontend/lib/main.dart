@@ -1,33 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vs/firstpage.dart';
+//bug settle later
 
 void main(){
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget{
   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context){
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home:Scaffold(
-        backgroundColor: Color.fromARGB(255, 116, 199, 237),
-        body:Center(
-        child: Container(
-          height:300,
-          width: 300,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20)
-          ),
-        )
-      ) 
-      ),
-    );
-  }
+
+@override
+Widget build(BuildContext context){
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home:FirstPage(),
+  );
+ }
 }
-
-//wahhhhhhhh
-
-
-  
