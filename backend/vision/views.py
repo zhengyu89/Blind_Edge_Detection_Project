@@ -8,6 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from google.cloud import vision
 from google.cloud.vision_v1 import types
 from dotenv import load_dotenv
+import requests
+import time
 
 # Load environment variables (e.g., GOOGLE_APPLICATION_CREDENTIALS)
 load_dotenv()
@@ -132,12 +134,57 @@ def process_frame(request):
             objects_data = []
             warning_message = "All clear ahead."
 
-        response_data = {
-            "objects": objects_data,
-            "warning_message": warning_message
-        }
-        return JsonResponse(response_data)
+#--------------------------------------------------------------------------------------------------------------------------
+# I had set a condition to restrict the calling of tts.
+# The TTS should only be call at least with a gap of 1 sec. 
+# If same thing, it need to have more gap. Including the all clear ahead message
+#--------------------------------------------------------------------------------------------------------------------------
+        
+        current_time = time.time()
+        # Ensure the global variables are initialized
+        if 'last_warning_message' not in globals():
+            last_warning_message = ""
+        if 'last_tts_time' not in globals():
+            last_tts_time = 0
 
+        if (
+            warning_message != last_warning_message and
+            current_time - last_tts_time >= 1
+        ):
+            try:
+                tts_response = requests.post("http://localhost:8000/tts/", json={"text": warning_message})
+                tts_response_data = tts_response.json()
+
+                if "audio_base64" in tts_response_data:
+                    audio_base64 = tts_response_data["audio_base64"]
+                    response_data = {
+                        "objects": objects_data,
+                        "warning_message": warning_message,
+                        "audio_base64": audio_base64
+                    }
+                    last_warning_message = warning_message
+                    last_tts_time = current_time
+                else:
+                    response_data = {
+                        "objects": objects_data,
+                        "warning_message": warning_message,
+                        "audio_base64": None,
+                        "error": "TTS service failed."
+                    }
+            except Exception as e:
+                response_data = {
+                    "objects": objects_data,
+                    "warning_message": warning_message,
+                    "audio_base64": None,
+                    "error": str(e)
+                }
+        else:
+            response_data = {
+                "objects": objects_data,
+                "warning_message": warning_message
+            }
+
+        return JsonResponse(response_data)
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)

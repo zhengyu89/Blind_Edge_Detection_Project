@@ -16,7 +16,7 @@ ENV_PATH = os.path.join(BASE_DIR, '.env')
 load_dotenv(ENV_PATH)
 
 # Debugging
-print("DEBUG (wsgi.py): GOOGLE_APPLICATION_CREDENTIALS =", os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+# print("DEBUG (wsgi.py): GOOGLE_APPLICATION_CREDENTIALS =", os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 
 # Ensure Django settings are loaded
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
