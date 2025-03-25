@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'users',
     'vision',
     'tts',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +72,22 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+#------------------------------------------------------------------------------------------------------
+# Allow all or specific origins
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:8000",
+#     "http://127.0.0.1:8000",
+#     "http://10.0.2.2:8000",
+# ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000", "http://10.0.2.2:8000"]
+#------------------------------------------------------------------------------------------------------
 
 ROOT_URLCONF = 'mysite.urls'
 

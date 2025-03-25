@@ -38,7 +38,7 @@ KEYWORDS = keywords = [
 
 # Set confidence threshold (adjust this value to control sensitivity)
 CONFIDENCE_THRESHOLD = 0.5
-
+@csrf_exempt
 def detect_edges(frame):
     """
     Send a frame (numpy array) to the Google Cloud Vision API
