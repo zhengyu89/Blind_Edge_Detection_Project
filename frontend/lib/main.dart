@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/firstpage.dart';
+import 'firstpage.dart';
 
-//bug settle later
 
 void main(){
   runApp(MyApp());
