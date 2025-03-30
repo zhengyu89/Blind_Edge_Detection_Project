@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/features/edge_detection/presentation/pages/camera_page.dart';
-import 'firstpage.dart';
+import 'package:google_fonts/google_fonts.dart';
+//import 'package:frontend/firstpage.dart';
 
 
 void main(){
@@ -15,9 +17,56 @@ class MyApp extends StatelessWidget{
 Widget build(BuildContext context){
   return MaterialApp(
     debugShowCheckedModeBanner: false,
-    home:CameraPage(), // home:FirstPage()
+    home:SplashScreen(),
+    //home:CameraPage(),
   );
  }
+}
+
+class SplashScreen extends StatefulWidget{
+  const SplashScreen({super.key});
+
+  @override
+  SplashScreenState createState() => SplashScreenState();
+}
+
+class SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => CameraPage()),
+      );
+    });
+  }
+@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.amber,
+      //backgroundColor: const Color.fromARGB(255, 176, 136, 87)
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/HearWay_Logo.jpg',
+              width:150,
+              height:150,
+            ),
+            SizedBox(height:20),
+          Text(
+          'HearWay',
+          style: GoogleFonts.dancingScript(
+            fontSize: 40, 
+            fontWeight: FontWeight.bold,
+            color: Colors.white),
+            ),
+          ],
+        ),
+      ),  
+    );
+  }
 }
 
 /* move to next page 
