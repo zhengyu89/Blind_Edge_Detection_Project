@@ -69,11 +69,4 @@ class EdgeDetectionService {
       return {};
     }
   }
-
-  static void playMP3(String base64MP3) async {
-    if (base64MP3.isEmpty) return;
-    Uint8List bytes = base64.decode(base64MP3);
-    final player = AudioPlayer();
-    await player.play(BytesSource(bytes)); // Play the decoded MP3 data
-  }
 }

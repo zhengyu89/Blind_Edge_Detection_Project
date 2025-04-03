@@ -43,14 +43,13 @@ class SplashScreenState extends State<SplashScreen> {
 @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber,
-      //backgroundColor: const Color.fromARGB(255, 176, 136, 87)
+      backgroundColor: const Color(0xFFB89261),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/HearWay_Logo.jpg',
+              'assets/images/HearWay_Logo_RemoveBG.png',
               width:150,
               height:150,
             ),

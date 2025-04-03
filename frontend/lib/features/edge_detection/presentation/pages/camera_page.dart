@@ -23,6 +23,9 @@ class _CameraPageState extends State<CameraPage> {
   List<Map<String, dynamic>> boundingBoxes = [];
   String warningMessage = '';
   String audioUrl = '';
+  String lastWarningMessage = ''; // Store last warning message
+  bool _isPlaying = false; // Prevent duplicate playback
+  DateTime? _lastTtsTime; // Timestamp for last played message
 
   @override
   void initState() {
@@ -56,10 +59,15 @@ class _CameraPageState extends State<CameraPage> {
 
       warningMessage = response['warning_message'] ?? '';
 
-      String base64Audio = response['audio_base64'] ?? '';
-      if (base64Audio.isNotEmpty) {
-        _playAudio(base64Audio);
-        print("✅ Audio played successfully.");
+      DateTime now = DateTime.now();
+      if (warningMessage != lastWarningMessage || _shouldPlayAgain(now)) {
+        String base64Audio = response['audio_base64'] ?? '';
+        if (base64Audio.isNotEmpty) {
+          _playAudio(base64Audio);
+          _lastTtsTime = now; // Update last playback time
+          lastWarningMessage = warningMessage; // Store last warning message
+          print("✅ Audio played successfully.");
+        }
       }
 
       print("✅ API response processed successfully.");
@@ -68,7 +76,16 @@ class _CameraPageState extends State<CameraPage> {
     });
   }
 
+  // ✅ Function to check if audio should play again after 5 seconds
+  bool _shouldPlayAgain(DateTime now) {
+    if (_lastTtsTime == null) return true;
+    return now.difference(_lastTtsTime!).inSeconds >= 5;
+  }
+
   Future<void> _playAudio(String base64Audio) async {
+    if (_isPlaying) return; // Prevent overlapping playback
+    _isPlaying = true;
+
     try {
       Uint8List audioBytes = base64Decode(base64Audio);
       final directory = await getTemporaryDirectory();
@@ -76,12 +93,13 @@ class _CameraPageState extends State<CameraPage> {
 
       await audioFile.writeAsBytes(audioBytes);
 
-      AudioPlayer audioPlayer = AudioPlayer();
-      await audioPlayer.play(DeviceFileSource(audioFile.path));
+      await _audioPlayer.play(DeviceFileSource(audioFile.path));
 
       print("✅ Audio playback successful!");
     } catch (e) {
       print("❌ Error playing audio: $e");
+    } finally {
+      _isPlaying = false; // Reset flag after playing
     }
   }
 
@@ -103,7 +121,7 @@ class _CameraPageState extends State<CameraPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: const Color(0xFFB89261),
         title: Text("HearWay", style: GoogleFonts.merriweather(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
@@ -150,7 +168,7 @@ class _CameraPageState extends State<CameraPage> {
         child: Container(
         // width: double.infinity, // Ensures full width
         width: MediaQuery.of(context).size.width * 0.95, //cut liao 0.9 jiu full screen
-        height: MediaQuery.of(context).size.height * (16/9), // Full screen height
+        height: MediaQuery.of(context).size.width * 0.95 * (16/9), // Full screen height size.height * (16/9)
         //margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.orange, width: 2),
@@ -220,7 +238,7 @@ class _CameraPageState extends State<CameraPage> {
               width: 50, // Circular size
               height: 50, // Circular size
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.8),
+                color: Colors.orange.withAlpha((0.8 * 255).toInt()),
                 //borderRadius: BorderRadius.circular(8),
                 shape: BoxShape.circle
               ),

@@ -19,9 +19,10 @@ class CameraService {
     await _cameraController.initialize();
   }
 
+// changing time
 void startFrameStreaming({required Function(Map<String, dynamic>) onFrameProcessed}) {
   _isStreaming = true;
-  _frameTimer = Timer.periodic(Duration(seconds: 2), (timer) {
+  _frameTimer = Timer.periodic(Duration(milliseconds: 500), (timer) { //seconds: 1 milliseconds: 100
     if (_isStreaming) {
       _captureFrame(onFrameProcessed);
     }
