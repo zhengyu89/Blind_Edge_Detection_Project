@@ -9,7 +9,7 @@ from google.cloud import vision
 from google.cloud.vision_v1 import types
 from dotenv import load_dotenv
 import requests
-import time
+import logging
 
 # Load environment variables (e.g., GOOGLE_APPLICATION_CREDENTIALS)
 load_dotenv()
@@ -17,27 +17,41 @@ load_dotenv()
 # Initialize Google Cloud Vision API client
 client = vision.ImageAnnotatorClient()
 
+# Initialize logger
+logging.basicConfig(level=logging.DEBUG)
+
+# Global variables (outside the function)
+last_warning_message = ""
+
+
 # Define keywords for detecting relevant objects
 KEYWORDS = keywords = [
     # Platform Edge & Gaps
-    "Platform", "Edge", "Gap", "Rail", "Track", "Cliff", "Drop", "Step", "Threshold",
+    "Platform", "Edge", "Gap", "Rail", "Track", "Cliff", "Drop", "Step", "Threshold", "Railing", "Staircase", "Step Edge",
 
     # Obstacles & Hazards
-    "Stairs", "Obstacle", "Barrier", "Pole", "Bench", "Signpost", "Pothole",
-    "Debris", "Uneven Surface", "Curb",
+    "Stairs", "Step", "Obstacle", "Barrier", "Pole", "Bench", "Signpost", "Pothole", 
+    "Debris", "Uneven Surface", "Curb", "Ramp", "Slope", "Ladder", "Step Stool", "Handrail", 
 
     # Train & Station Related Objects
     "Train", "Subway", "Railway", "Ticket Gate", "Turnstile", "Platform Sign",
 
     # Safety & Navigation
-    "Handrail", "Warning Sign", "Yellow Line", "Crosswalk", "Tactile Paving",
+    "Handrail", "Warning Sign", "Yellow Line", "Crosswalk", "Tactile Paving", "Step Warning", "Tactile Markings",
 
-    #People
-    "Person",
+    # People & Movement
+    "Person", "Pedestrian", "Traveler", "Movement", "Walk", "Walking",
+
+    # Household Objects
+    "Chair", "Table", "Sofa", "Couch", "Armchair", "Recliner", "Ottoman", "Bench", "Stool", "Bookshelf", "Cabinet", "Drawer", "TV Stand", 
+     "Coffee Table", "End Table", "Side Table", "Sideboard", "Rug", "Carpet", "Curtain", "Door", "Shelf",
+
 ]
+
 
 # Set confidence threshold (adjust this value to control sensitivity)
 CONFIDENCE_THRESHOLD = 0.5
+
 @csrf_exempt
 def detect_edges(frame):
     """
@@ -136,20 +150,27 @@ def process_frame(request):
 
 #--------------------------------------------------------------------------------------------------------------------------
 # I had set a condition to restrict the calling of tts.
-# The TTS should only be call at least with a gap of 1 sec. 
+# The TTS should only be call at least with a gap of 5 sec. 
 # If same thing, it need to have more gap. Including the all clear ahead message
 #--------------------------------------------------------------------------------------------------------------------------
+
+        global last_warning_message
+
+
+        # # Ensure the global variables are initialized
+        # if 'last_warning_message' not in globals():
+        #     last_warning_message = ""
+        # if 'last_tts_time' not in globals():
+        #     last_tts_time = time.time()
+
         
-        current_time = time.time()
-        # Ensure the global variables are initialized
-        if 'last_warning_message' not in globals():
-            last_warning_message = ""
-        if 'last_tts_time' not in globals():
-            last_tts_time = 0
+
+        # Debugging logs
+        logging.debug(f"Current warning_message: {warning_message}")
+        logging.debug(f"Last warning_message: {last_warning_message}")
 
         if (
-            warning_message != last_warning_message and
-            current_time - last_tts_time >= 1
+            warning_message != last_warning_message
         ):
             try:
                 tts_response = requests.post("http://localhost:8000/tts/", json={"text": warning_message})
@@ -163,7 +184,7 @@ def process_frame(request):
                         "audio_base64": audio_base64
                     }
                     last_warning_message = warning_message
-                    last_tts_time = current_time
+                    logging.debug(f"New audio generated for warning message: {warning_message}")
                 else:
                     response_data = {
                         "objects": objects_data,
