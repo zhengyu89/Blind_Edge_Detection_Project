@@ -94,3 +94,123 @@ When an obstacle or hazard is detected:
 </p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Setup Guide
+ 
+ ### 1. Clone the Repository
+ 
+ ```bash
+ git clone https://github.com/zhengyu89/Blind_Edge_Detection_Project.git
+ cd Blind_Edge_Detection_Project
+ ```
+ ## 🐍 Backend Setup (Django + Google Cloud Vision)
+ 
+ ### 2. Create & Activate Virtual Environment
+ 
+ ```bash
+ python -m venv venv
+ 
+ # Activate on Windows
+ venv\Scripts\activate
+ 
+ # Activate on macOS/Linux
+ source venv/bin/activate
+ ```
+ 
+ ### 3. Install Required Dependencies
+ 
+ ```bash
+ pip install -r requirements.txt
+ ```
+ 
+ ### 4. Configure Google Cloud Credentials
+ 
+ #### a. Create a .env file and set your credential path:
+ 
+ ```env
+ GOOGLE_APPLICATION_CREDENTIALS=C:\YourPath\Blind_Edge_Detection_Project\backend\config\service-account.json
+ ```
+ 
+ #### b. Create a folder for your credentials:
+ 
+ ```bash
+ mkdir backend/config
+ ```
+ 
+ #### c. Place your Google Cloud Service Account Key in `backend/config/` and name it:
+ 
+ ```
+ service-account.json
+ ```
+ 
+ ## 📱 Android Device Setup (for Flutter Testing)
+ 
+ > Note: A physical Android device is required for real-time image capture and testing.
+ 
+ ### 5. Enable USB Debugging
+ 
+ * Open Settings > About Phone
+ * Tap Build Number 7 times to enable Developer Options
+ * Go to Developer Options and enable USB Debugging
+ 
+ ### 6. Connect Phone via ADB (Command Prompt Only)
+ 
+ #### In Command Prompt (cmd), run:
+ 
+ ```bash
+ adb devices
+ adb reverse tcp:8000 tcp:8000
+ ```
+ 
+ >This allows your Android device to connect to the backend server running on your computer.
+ 
+ ### 7. Select Device in VS Code
+ 
+ * In VS Code, choose your phone from the Flutter device dropdown (bottom-right corner)
+ 
+ ## 🚀 Running the App
+ 
+ ### 8. Start Django Backend Server
+ 
+ ```bash
+ # Activate virtual environment (if not already)
+ venv\Scripts\activate  # Windows
+ source venv/bin/activate  # macOS/Linux
+ 
+ # Navigate to backend
+ cd backend
+ 
+ # Run the server
+ python manage.py runserver
+ ```
+ 
+ ### 9. Run Flutter Frontend
+ 
+ #### Open a new terminal:
+ 
+ ```bash
+ cd frontend
+ flutter run
+ ```
+ 
+ ## 📌 Notes
+ * Make sure your phone and computer are on the same network if you're using ADB over TCP/IP.
+ * Use flutter doctor to ensure your dev environment is properly set up.
+ * Use `flutter doctor` to ensure your dev environment is properly set up.
+ 
+ ## 💪 You're good to go!
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <p align="right">(<a href="#readme-top">back to top</a>)</p>
